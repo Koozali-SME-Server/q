@@ -1,54 +1,54 @@
-%define name q
-%define version 1.0
-%define release 1
-Summary: This is what q does.
-Name: %{name}
-Version: %{version}
-Release: %{release}%{?dist}
-Source: %{name}-%{version}.tar.gz
-License: GNU GPL version 2
-Group: SMEserver/addon
-BuildRoot: %{_tmppath}/%{name}-buildroot
-Prefix: %{_prefix}
-BuildArchitectures: noarch
-BuildRequires: smeserver-devtools
-Requires: smeserver-release >= 11.0
-AutoReqProv: no
+# Something that need for rpm-4.1
+%define _missing_doc_files_terminate_build 0
+%undefine _missing_build_ids_terminate_build 
+%define debug_package %{nil}
+%define use_date %(date "+%F")
+
+Name:          q
+Version:       0.19.2
+Release:       1
+License:       GNU GPL-3.0 
+Group:         DNS
+Summary:       A tiny CLI DNS client library with support for UDP, TCP, DoT, DoH, and DoQ.
+URL:           https://natesales.net/
+Vendor:        Nate Sales
+Packager:      Jeam-Philippe Pialasse <jpp@koozali.org>
+Source:	       q-%{version}.tar.gz
+Source1:       vendor.tar.gz
+Provides:      q = %{version}
+BuildRequires: golang
+BuildArch:     x86_64
+AutoProv: no
+AutoReq: no
 
 %description
-A tiny and feature-rich command line DNS client with support for UDP, TCP, DoT, DoH, DoQ, and ODoH
-
-%changelog
-* Day MMMM DD YYYY <brianr@koozali.org> 1.0-1.sme
-- Initial code - create RPM [SME:99999]
+A tiny CLI DNS client library with support for UDP, TCP, DoT, DoH, and DoQ.
 
 %prep
+%setup -a 1
+# NB to prepare new package first download the q tar.gz
+# then uncompress
+# then go inside and do
+# cd %{name}-%{version}/
+# go mod vendor
+# tar -czf ../vendor.tar.gz vendor
 
-%setup -q
 
 %build
+go build -ldflags="-s -w -X main.version=%{version} -X main.commit=Koozali_SME_Server -X main.date=${use_date}"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-(cd root   ; find . -depth -print | cpio -dump $RPM_BUILD_ROOT)
-rm -f %{name}-%{version}-filelist
-/sbin/e-smith/genfilelist $RPM_BUILD_ROOT \
-> %{name}-%{version}-filelist
-#echo "%doc COPYING"  >> %{name}-%{version}-filelist
-#--dir <dir> 'attr(755,user,grp)' \
-#--file <file> 'attr(755,root,root)' \
+mkdir -p %{buildroot}/usr/bin/
+install -m 0755 q %{buildroot}/usr/bin/q
 
-%clean
-cd ..
-rm -rf %{name}-%{version}
+%files
+%attr(0755, root, root) "/usr/bin/q"
 
-%pre
 
-%preun
+%changelog
+* Thu Jan 02 2025 Jean-Philippe Pialasse <jpp@koozali.org> 0.19.2-1.sme
+- bump version and initial import to SME 11 core
 
-%post
+* Sun Aug 14 2022 Jean-Philippe Pialasse <tests@pialasse.com> 0.8.2-2.sme
+- initial import in SME 10 contribs
 
-%postun
-#uninstall
-%files -f %{name}-%{version}-filelist
-%defattr(-,root,root)
