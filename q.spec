@@ -6,7 +6,7 @@
 
 Name:          q
 Version:       0.19.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       GNU GPL-3.0 
 Group:         DNS
 Summary:       A tiny CLI DNS client library with support for UDP, TCP, DoT, DoH, and DoQ.
@@ -17,7 +17,6 @@ Source:	       q-%{version}.tar.gz
 Source1:       vendor.tar.gz
 Provides:      q = %{version}
 BuildRequires: golang
-BuildArch:     x86_64
 AutoProv: no
 AutoReq: no
 
@@ -46,6 +45,9 @@ install -m 0755 q %{buildroot}/usr/bin/q
 
 
 %changelog
+* Tue Sep 22 2026 Jean-Philippe Pialasse <jpp@koozali.org> 0.19.2-2.sme
+- allow build for aarch64
+
 * Thu Jan 02 2025 Jean-Philippe Pialasse <jpp@koozali.org> 0.19.2-1.sme
 - bump version and initial import to SME 11 core
 
