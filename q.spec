@@ -6,7 +6,7 @@
 
 Name:          q
 Version:       0.19.2
-Release:       1
+Release:       1%{?dist}
 License:       GNU GPL-3.0 
 Group:         DNS
 Summary:       A tiny CLI DNS client library with support for UDP, TCP, DoT, DoH, and DoQ.
